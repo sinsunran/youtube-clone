@@ -1,0 +1,28 @@
+{
+  "name": "youtube-clone",
+  "version": "1.0.0",
+  "description": "video watching tool",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sinsunran/youtube-clone.git"
+  },
+  "scripts": {
+    "dev": "nodemon --delay 2s --exec babel-node src/server.js"
+  },
+  "author": "JH",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sinsunran/youtube-clone/issues"
+  },
+  "homepage": "https://github.com/sinsunran/youtube-clone#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodeman": "^1.1.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@babel/node": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "nodemon": "^2.0.20"
+  }
+}
