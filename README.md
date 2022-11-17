@@ -3,14 +3,14 @@
 / -> Home
 /join -> Join
 /login -> Login
-/search ->Search
+/search -> Search
 
-/edit-profile -> Edit Profile
-/users/edit
-/delte- profile ->Delete profile
-/users/delete
+/users/:id-> See user
+/users/logout-> Log out
+/users/edit -> Edit my profile
+/users/remove ->Delete my profile
 
-/watch-video ->Watch Video
-
-/edit-video ->Edit Video
-/delete-video ->Delete Video
+/video/:id ->Watch Video
+/video/:id/edit ->Edit Video
+/video/:id/remove ->Delete Video
+/video/upload -> Upload video
