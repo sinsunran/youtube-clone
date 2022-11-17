@@ -17,6 +17,7 @@
   "homepage": "https://github.com/sinsunran/youtube-clone#readme",
   "dependencies": {
     "express": "^4.18.2",
+    "morgan": "^1.10.0",
     "nodeman": "^1.1.2"
   },
   "devDependencies": {
