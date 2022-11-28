@@ -1,11 +1,8 @@
 extends base.pug
 
-block content 
-    h3 #{video.views} #{video.views === 1 ? "view" : "views"}
+block content
+    p=video.description 
     a(href=`${video.id}/edit`) Edit Video &rarr;
+    br
+    a(href=`${video.id}/remove`) Delete Video &rarr;
 
-block upload 
-    nav     
-        ul
-            li  
-                a(href="upload") Upload Video

@@ -1,6 +1,10 @@
 extends base.pug    
 
 block content 
+    if errorMessage 
+        span=errorMessage
     form(method="POST")
-        input(name="title", required, placeholder="New Video Title")
+        input(name="title", required, placeholder="Title",type="text")
+        input(name="description", required, placeholder="Description",type="text")
+        input(name="hashtags", required, placeholder="Hashtags, separated by comma",type="text")
         button(type="submit") Upload

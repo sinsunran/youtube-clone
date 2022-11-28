@@ -7,7 +7,7 @@
     "url": "git+https://github.com/sinsunran/youtube-clone.git"
   },
   "scripts": {
-    "dev": "nodemon --delay 2s --exec babel-node src/server.js"
+    "dev": "nodemon --delay 2s --exec babel-node src/init.js"
   },
   "author": "JH",
   "license": "MIT",
@@ -28,5 +28,3 @@
     "nodemon": "^2.0.20"
   }
 }
-
-
