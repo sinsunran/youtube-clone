@@ -1,0 +1,21 @@
+extends base.pug
+
+block content 
+    if errorMessage
+        h2=errorMessage
+
+    form(method="POST")
+        input(type="text",required, name="name",placeholder="name")
+        input(type="text",required, name="username",placeholder="username")
+        input(type="password",required, name="password1",placeholder="password")
+        input(type="password",required, name="password2",placeholder="confirm password")
+        input(type="email",required, name="email",placeholder="email")
+        input(type="text",name="location",placeholder="location")
+        input(type="submit",value="join")
+    
+    hr
+    div
+        div  
+            span you already have an account?
+        div    
+            a(href="/login") Log in now!

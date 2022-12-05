@@ -1,7 +1,7 @@
 doctype html 
 html(lang="ko")
     head 
-        title #{pageTitle} | YouTube
+        title #{pageTitle} | #{siteName}
         link(rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css")
     body
         header
@@ -10,11 +10,20 @@ html(lang="ko")
                      li  
                          a(href="/") Home
                      li  
-                         a(href="videos/upload") Upload Video
-                     li  
-                         a(href="/search") Search Video
+                         a(href="/search") Search   
+                     if !loggedIn
+                        li
+                            a(href="/join") Join
+                        li
+                            a(href="/login") Log in
+                     else    
+                        li 
+                            a(href="/logout") Log out
+                        li  
+                            a(href="videos/upload") Upload Video
             h1=pageTitle 
             block upload
         main     
             block content
+       
             include partials/footer.pug 
