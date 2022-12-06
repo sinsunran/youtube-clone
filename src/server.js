@@ -4,6 +4,7 @@ import rootRouter from "./routers/rootRouters";
 import userRouter from "./routers/userRouters";
 import videoRouter from "./routers/videoRouters";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import { localsMiddleware } from "./middlewares.js";
 
 const app = express();
@@ -14,7 +15,14 @@ app.set("views", process.cwd() + "/src/views");
 app.set("view engine", "pug");
 app.use(logger);
 app.use(express.urlencoded({ extended: true }));
-app.use(session({ secret: "Hello!", resave: true, saveUninitialized: true }));
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
+  })
+);
 app.use(localsMiddleware);
 app.use("/", rootRouter);
 app.use("/videos", videoRouter);
