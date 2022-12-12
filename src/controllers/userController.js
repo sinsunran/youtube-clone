@@ -31,13 +31,12 @@ export const postJoin = async (req, res) => {
     return res.status(400).render("join", { pageTitle: "Join" });
   }
 };
-export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Delete User");
 export const getLogin = (req, res) =>
   res.render("login", { pageTitle: "Login" });
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
-  const user = await User.findOne({ username });
+  const user = await User.findOne({ username, socialOnly: false });
   if (!user) {
     return res.status(400).render("login", {
       pageTitle: "Login",
@@ -94,7 +93,7 @@ export const finishGithubLogin = async (req, res) => {
       })
     ).json();
     const emailData = await (
-      await fetch(`${apiUrl}/emails`, {
+      await fetch(`${apiUrl}/user/emails`, {
         headers: {
           Authorization: `token ${access_token}`,
         },
@@ -106,14 +105,11 @@ export const finishGithubLogin = async (req, res) => {
     if (!emailObj) {
       return res.redirect("/login");
     }
-    const existingUser = await User.findOne({ email: emailObj.email });
-    if (existingUser) {
-      req.session.loggedIn = true;
-      req.session.user = existingUser;
-      return res.redirect("/");
-    } else {
-      const user = await User.create({
-        name: userData.naem,
+    let user = await User.findOne({ email: emailObj.email });
+    if (!user) {
+      user = await User.create({
+        name: userData.name,
+        avatarUrl: userData.avatarUrl,
         socialOnly: true,
         username: userData.login,
         email: emailObj.email,
@@ -121,10 +117,82 @@ export const finishGithubLogin = async (req, res) => {
         location: userData.location,
       });
     }
+    req.session.loggedIn = true;
+    req.session.user = user;
+    return res.redirect("/");
   } else {
     return res.redirect("/login");
   }
 };
+export const getEdit = (req, res) => {
+  res.render("users/edit-profile", { pageTitle: "Edit Profile" });
+};
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id, avatarUrl },
+    },
+    body: { name, email, username, location },
+    file,
+  } = req;
+  const DBUser = await User.findById(_id);
+  const DBUsername = DBUser.username;
+  const DBEmail = DBUser.email;
+  const exists = await User.exists({ $or: [({ name }, { email })] });
+  if (DBUsername === username && DBEmail === email) {
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      {
+        avatarUrl: file ? file.path : avatarUrl,
+        name,
+        email,
+        username,
+        location,
+      },
+      { new: true }
+    );
+    req.session.user = updatedUser;
+    return res.redirect("/users/edit");
+  } else if (exists) {
+    return res.status(400).render("users/edit-profile", {
+      pageTitle: "Edit Profile",
+      errorMessage: "there is user already using same email or username!",
+    });
+  }
+};
+
+export const logout = (req, res) => {
+  req.session.destroy();
+  return res.redirect("/");
+};
+
+export const getChangePassword = (req, res) =>
+  res.render("users/change-password", { pageTitle: "Change Password" });
+export const postChangePassword = async (req, res) => {
+  const {
+    session: {
+      user: { _id, password },
+    },
+    body: { oldPassword, newPassword, newPassword1 },
+  } = req;
+  const ok = await bcrypt.compare(oldPassword, password);
+  if (!ok) {
+    return res.status(400).render("users/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "please write right Old Password",
+    });
+  }
+  if (newPassword !== newPassword1) {
+    return res.status(400).render("users/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "password confirmation does not matched",
+    });
+  }
+  const user = await User.findById(_id);
+  user.password = newPassword;
+  await user.save();
+  req.session.user.password = user.password;
+  return res.redirect("/users/logout");
+};
 
 export const see = (req, res) => res.send("See User");
-export const logout = (req, res) => res.send("logout User");

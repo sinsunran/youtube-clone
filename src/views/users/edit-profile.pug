@@ -1,0 +1,19 @@
+extends ../base
+
+block content 
+    h4 Edit Profole
+        if errorMessage
+            h3=errorMessage
+        img(src="/"+ loggedInUser.avatarUrl, width="100px",height="100px")
+        form(method="POST", enctype="multipart/form-data")
+            input(name="email",placeholder="email",type="email",value=loggedInUser.email, required)
+            input(name="username",placeholder="username",value=loggedInUser.username, required)
+            input(name="name",placeholder="name",value=loggedInUser.name, required)
+            input(name="location",placeholder="location",value=loggedInUser.location, required)
+            label(for="avatar") Avatar
+            input(name="avatar",id="avatar",type="file", accept="image/*")
+            input(type="submit",value="Update Profile")
+            
+            if !loggedInUser.socialOnly
+                hr
+                a(href="change-password") Change password
